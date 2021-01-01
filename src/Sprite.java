@@ -7,67 +7,74 @@ public class Sprite {
     public double rotation; //degrees
     public Rectangle boundary;
     public Image image;
-    public double elapsedTime; //seconds
-
-    public Sprite(){
-        this.position = new Vector();
-        this.velocity = new Vector();
-        this.rotation = 0;
-        this.boundary = new Rectangle();
-        this.elapsedTime = 0;
-    }
+    public boolean remove;
 
     public Sprite(String imageFileName){
-        this();
+        position = new Vector();
+        velocity = new Vector();
+        boundary = new Rectangle();
+        rotation = 0;
+        remove=false;
         setImage(imageFileName);
     }
 
+    public Sprite(Sprite spaceship){
+        position = new Vector();
+        velocity = new Vector();
+        boundary = new Rectangle();
+        image = new Image("image/laser.png");
+        rotation = spaceship.rotation;
+        remove = false;
+        position.set(spaceship.position.x,spaceship.position.y);
+        velocity.setLength(500);
+        velocity.setAngle(rotation);
+        boundary.setSize(image.getWidth(),image.getWidth());
+    }
+
     public void setImage(String imageFileName){
-        this.image = new Image(imageFileName);
-        this.boundary.setSize( this.image.getWidth(), this.image.getHeight());
+        image = new Image(imageFileName);
+        boundary.setSize(image.getWidth(),image.getHeight());
     }
 
     public Rectangle getBoundary(){
-        this.boundary.setPosition( this.position.x, this.position.y);
+        this.boundary.setPosition(
+                position.x - boundary.width/2,
+                position.y - boundary.height/2);
         return this.boundary;
     }
 
     public boolean Overlaps(Sprite other){
-        return this.getBoundary().Overlaps(other.getBoundary());
+        return getBoundary().Overlaps(other.getBoundary());
     }
 
     public void wrap (double screenWidth, double screenHeight){
 
-        double halfWidth = this.image.getWidth()/2;
-        double halfHeight = this.image.getHeight()/2;
+        double length = image.getHeight()/2;
 
-        if(this.position.x + halfWidth < 0)
-            this.position.x = screenWidth + halfWidth;
-        if(this.position.x > screenWidth + halfWidth)
-            this.position.x = -halfWidth/2;
-        if(this.position.y + halfHeight < 0)
-            this.position.y = screenHeight + halfHeight;
-        if(this.position.y > screenHeight + halfHeight)
-            this.position.y = -halfHeight;
+        if(position.x + length < 0)
+            position.x = screenWidth + length;
+        if(position.x > screenWidth + length)
+            position.x = -length / 2;
+        if(position.y + length < 0)
+            position.y = screenHeight + length;
+        if(position.y > screenHeight + length)
+            position.y = -length;
     }
 
-    public void update(double deltaTime){
-        // increase elapsed time for this sprite
-        this.elapsedTime += deltaTime;
-        // update position accoriding to velocity
-        this.position.add(this.velocity.x * deltaTime, this.velocity.y * deltaTime);
-        // wrap around screen
-        this.wrap(800,600);
+    public void update(){
+        // update position according to velocity
+        double deltaTime = 1/60.0;
+        position.add(velocity.x * deltaTime, velocity.y * deltaTime);
     }
 
     public void render(GraphicsContext context){
         context.save();
-
-        context.translate( this.position.x, this.position.y);
-        context.rotate(this.rotation);
-        context.translate( -this.image.getWidth()/2, -this.image.getHeight()/2);
-        context.drawImage(this.image, 0,0);
-
+        context.translate(position.x,position.y);
+        context.rotate(rotation);
+        //context.translate( -image.getWidth()/2, -image.getHeight()/2);
+        context.drawImage(image, -image.getWidth()/2, -image.getHeight()/2);
         context.restore();
     }
+
+    public boolean getRemove(){return remove;}
 }

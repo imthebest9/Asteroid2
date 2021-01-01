@@ -3,8 +3,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 import java.io.IOException;
-//HELLO EVERYBODY I AM CHANGING THE CODE
+
 public class Asteroids extends Application {
     public static void main (String[] args)  {
         try{
@@ -20,7 +22,8 @@ public class Asteroids extends Application {
     public void start(Stage mainStage) throws IOException{
         mainStage.setTitle("Asteroids");
         Parent menuroot = FXMLLoader.load(getClass().getResource("mainmenu.fxml"));
-        mainStage.setScene(new Scene(menuroot, 800, 600));
+        mainStage.setScene(new Scene(menuroot));
+        mainStage.initStyle(StageStyle.UNDECORATED);
         mainStage.show();
     }
 }

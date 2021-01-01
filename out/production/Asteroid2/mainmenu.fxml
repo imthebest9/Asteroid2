@@ -2,18 +2,25 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
-      <Label layoutX="140.0" layoutY="41.0" prefHeight="61.0" prefWidth="520.0" text="WELCOME TO THE ASTEROID GAME">
+      <ImageView pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@image/pastel.gif" />
+         </image>
+      </ImageView>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="226.0" layoutY="85.0" prefHeight="60.0" prefWidth="520.0" style="-fx-border-color: white; -fx-border-width: 3;" text="WELCOME TO THE ASTEROID GAME" textAlignment="CENTER" AnchorPane.bottomAnchor="360.0" AnchorPane.leftAnchor="240.0" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="80.0">
          <font>
             <Font name="Georgia" size="28.0" />
          </font>
       </Label>
-      <Button layoutX="334.0" layoutY="144.0" mnemonicParsing="false" onAction="#toplaygame" prefHeight="40.0" prefWidth="132.0" text="PLAY" />
-      <Label layoutX="173.0" layoutY="500.0" text="RULE: USE ARROWS TO MOVE, USE SPACE TO SHOOT">
+      <Button layoutX="422.0" layoutY="232.0" mnemonicParsing="false" onAction="#toplaygame" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: white; -fx-border-width: 2; -fx-border-color: pink;" text="PLAY" AnchorPane.leftAnchor="435.0" AnchorPane.rightAnchor="435.0" />
+      <Label alignment="CENTER" layoutX="255.0" layoutY="357.0" style="-fx-background-color: pink; -fx-background-radius: 3;" text="RULE: USE ARROWS TO MOVE, USE SPACE TO SHOOT" textAlignment="CENTER" AnchorPane.leftAnchor="270.0" AnchorPane.rightAnchor="270.0">
          <font>
             <Font size="19.0" />
          </font>

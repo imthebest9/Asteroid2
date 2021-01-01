@@ -1,15 +1,10 @@
 public class Rectangle {
     // (x,y) represents top left corner of rectangle
-    double x,y, width, height;
+    double x,y,width,height;
 
     public Rectangle(){
         this.setPosition(0,0);
         this.setSize(1,1);
-    }
-
-    public Rectangle(double x, double y, double w, double h){
-        this.setSize(w,h);
-        this.setPosition(x,y);
     }
 
     public void setPosition(double x, double y){
@@ -28,12 +23,9 @@ public class Rectangle {
         // 2: other is to the left of this
         // 3: this is above other
         // 4: other is above this
-
-        boolean noOverlap
-                = this.x + this.width < other.x
-                || other.x + other.width < this.x
-                || this.y + this.height < other.y
-                || other.y + other.height < this.y;
-        return !noOverlap;
+        return !(x + width < other.x
+                || other.x + other.width < x
+                || y + height < other.y
+                || other.y + other.height < y);
     }
 }

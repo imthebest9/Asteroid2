@@ -1,149 +1,158 @@
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Controller {
-    @FXML
-    private Button gotogame;
-    @FXML
-    private Button dynamicallocation;
 
     int score;
+    int combo;
+    int life=2;
+    int rewardBoundary=20;
+    double width;
+    double height;
 
-    public void toplaygame(ActionEvent event) throws IOException {
+    public void toplaygame(ActionEvent event) {
         BorderPane root = new BorderPane();
         Scene mainScene = new Scene(root);
+        Sprite background = new Sprite("image/pastel.gif");
 
-        Canvas canvas = new Canvas(800, 600);
+        width = background.image.getWidth();
+        height = background.image.getHeight();
+
+        background.position.set(width/2,height/2);
+
+        Sprite spaceship = new Sprite("image/barbie.png");
+        spaceship.position.set(width/2,height/2);
+
+        Canvas canvas = new Canvas(width, height);
         GraphicsContext context = canvas.getGraphicsContext2D();
         root.setCenter(canvas);
 
         // handle continuous inputs (as long as key is pressed)
-        ArrayList<String> keyPressedList = new ArrayList<String>();
-        // handle discrete inputs (once per key pressed)
-        ArrayList <String> keyJustPressedList = new ArrayList<String>();
+        LinkedList<KeyCode> keyPressedList = new LinkedList<>();
 
-        mainScene.setOnKeyPressed(
-                (KeyEvent event2) ->
+        LinkedList <Sprite> laserList = new LinkedList<>();
+        LinkedList <Sprite> asteroidList = new LinkedList<>();
+
+        mainScene.setOnKeyPressed(key ->
                 {
-                    String keyName = event2.getCode().toString();
+                    KeyCode keyName = key.getCode();
                     //avoid adding duplicates to the list
-                    if(!keyPressedList.contains(keyName)) {
-                        keyPressedList.add(keyName);
-                        keyJustPressedList.add(keyName);
+                    switch (keyName){
+                        case SPACE:
+                            Sprite laser = new Sprite(spaceship);
+                            laserList.add(laser);
+                            break;
+                        case ESCAPE:
+                            System.exit(0);
+                        default:
+                            if(!keyPressedList.contains(keyName)) {
+                                keyPressedList.add(keyName);
+                            }
                     }
                 }
         );
 
-        mainScene.setOnKeyReleased(
-                (KeyEvent event2) ->
-                {
-                    String keyName = event2.getCode().toString();
-                    if(keyPressedList.contains(keyName))
-                        keyPressedList.remove(keyName);
-                }
-        );
-
-        Sprite background = new Sprite("image/space-01.png");
-        background.position.set(400,300);
-
-        Sprite spaceship = new Sprite("image/spaceshipv2.png");
-        spaceship.position.set(100,300);
-
-        ArrayList <Sprite> laserList = new ArrayList<Sprite>();
-        ArrayList <Sprite> asteroidList = new ArrayList<Sprite>();
-
-        int asteroidCount = 6;
-        for(int i=0; i< asteroidCount; i++){
-            Sprite asteroid = new Sprite("image/rock.png");
-            double x = 500 * Math.random() + 300; // 300-800
-            double y = 400 * Math.random() + 100; // 100-500
-            asteroid.position.set(x,y);
-            double angle = 360 * Math.random();
-            asteroid.velocity.setLength(50);
-            asteroid.velocity.setAngle(angle);
-            asteroidList.add(asteroid);
-        }
+        mainScene.setOnKeyReleased(key -> keyPressedList.remove(key.getCode()));
 
         score = 0;
         AnimationTimer gameloop = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 // process user input
-                if( keyPressedList.contains("LEFT"))
+                if( keyPressedList.contains(KeyCode.LEFT))
                     spaceship.rotation -= 3;
-                if( keyPressedList.contains("RIGHT"))
+                if( keyPressedList.contains(KeyCode.RIGHT))
                     spaceship.rotation += 3;
-                if( keyPressedList.contains("UP")){
+                if( keyPressedList.contains(KeyCode.UP)){
                     spaceship.velocity.setLength(150);
-                    spaceship.velocity.setAngle( spaceship.rotation);
+                    spaceship.velocity.setAngle(spaceship.rotation);
                 }
                 else{
                     spaceship.velocity.setLength(0);
                 }
-                if( keyJustPressedList.contains("SPACE")){
-                    Sprite laser = new Sprite("image/laser.png");
-                    laser.position.set( spaceship.position.x, spaceship.position.y);
-                    laser.velocity.setLength(400);
-                    laser.velocity.setAngle( spaceship.rotation);
-                    laserList.add(laser);
-                }
-                // after processing user input, clear justPressedList
-                keyJustPressedList.clear();
 
-                spaceship.update(1/60.0);
-                for(Sprite asteroid: asteroidList)
-                    asteroid.update(1/60.0);
-                // update laser, destroy it if 2 secs are passed
-                for (int i=0; i < laserList.size(); i++){
-                    Sprite laser = laserList.get(i);
-                    laser.update(1/60.0);
-                    if (laser.elapsedTime > 2)
-                        laserList.remove(i);
+                if (Math.random()<0.01 && asteroidList.size()<10){
+                    Sprite asteroid = new Sprite("image/lovesick.png");
+                    while(true){
+                        double x = Math.random()*width;
+                        double y = Math.random()*height;
+                        asteroid.position.set(x,y);
+                        if(Math.abs(spaceship.position.x-x)>50 && Math.abs(spaceship.position.y-y)>50)
+                            break;
+                        else asteroid.setImage("image/donut.png");
+                    }
+                    asteroid.velocity.setLength(50);
+                    asteroid.velocity.setAngle(360 * Math.random());
+                    asteroidList.add(asteroid);
                 }
 
-                // when laser overlaps asteroid, remove both
-                for(int laserNum=0; laserNum < laserList.size(); laserNum++){
-                    Sprite laser = laserList.get(laserNum);
-                    for(int asteroidNum=0; asteroidNum < asteroidList.size(); asteroidNum++){
-                        Sprite asteroid = asteroidList.get(asteroidNum);
+                for (Sprite laser:laserList){
+                    if(!laser.Overlaps(background)) {
+                        laser.remove=true;
+                        score-=100;
+                        combo=0;
+                    }
+                    for(Sprite asteroid:asteroidList){
                         if(laser.Overlaps(asteroid)){
-                            laserList.remove(laserNum);
-                            asteroidList.remove(asteroidNum);
+                            laser.remove=true;
+                            asteroid.remove=true;
                             score += 100;
+                            combo++;
                         }
                     }
                 }
 
-                background.render(context);
+                for(Sprite asteroid:asteroidList){
+                    if(asteroid.Overlaps(spaceship) && !asteroid.remove){
+                        asteroid.remove=true;
+                        life--;
+                    }
+                }
+
+                asteroidList.forEach(Sprite::update);
+                laserList.forEach(Sprite::update);
+
+                asteroidList.removeIf(Sprite::getRemove);
+                laserList.removeIf(Sprite::getRemove);
+
+                spaceship.update();
+                spaceship.wrap(width,height);
+
+                context.clearRect(0,0,width,height);
+                context.drawImage(background.image, 0,0);
                 spaceship.render(context);
+
                 for (Sprite laser: laserList)
                     laser.render(context);
-                for (Sprite asteroid: asteroidList)
+
+                for (Sprite asteroid: asteroidList) {
+                    asteroid.wrap(width,height);
                     asteroid.render(context);
+                }
+
+                if (combo == rewardBoundary) {
+                    life++;
+                    rewardBoundary+=20;
+                }
 
                 // draw score on screen
                 context.setFill(Color.WHITE);
                 context.setStroke(Color.GREEN);
-                context.setFont(new Font("Arial Black",48));
-                context.setLineWidth(3);
-                String text = "Score: " + score;
-                int textX = 500;
+                context.setFont(new Font("Arial Black",30));
+                context.setLineWidth(1);
+                String text = "Score: " + score + " Combo: " + combo + " Life: " + life;
+                int textX = 10;
                 int textY = 50;
                 context.fillText(text, textX, textY);
                 context.strokeText(text, textX, textY);

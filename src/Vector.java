@@ -2,11 +2,7 @@ public class Vector {
     public double x, y;
 
     public Vector(){
-        this.set(0,0);
-    }
-
-    public Vector(double x, double y){
-        this.set(x,y);
+        set(0,0);
     }
 
     public void set(double x, double y){
@@ -15,44 +11,36 @@ public class Vector {
     }
 
     public void add(double dx, double dy){
-        this.x += dx;
-        this.y += dy;
+        x += dx;
+        y += dy;
     }
 
     public void multiply(double m){
-        this.x *= m;
-        this.y *= m;
+        x *= m;
+        y *= m;
     }
 
     public double getLength(){
-        return Math.sqrt(this.x * this.x + this.y * this.y);
+        return Math.sqrt(x * x + y * y);
     }
 
     public void setLength(double L){
-        double currentLength = this.getLength();
+        double currentLength = getLength();
         //if current length is zero, then current angle is undefined
         //assume current angle is zero (pointing to the right)
         if(currentLength ==  0){
-            this.set(L,0);
+            set(L,0);
         }
         else{
             //scale vector down to length one
-            this.multiply( 1/currentLength);
-            //scale vector to have L
-            this.multiply(L);
+            multiply( L/currentLength);
         }
-
-    }
-
-    public double getAngle(){
-        return Math.toDegrees(Math.atan2(this.y, this.x));
     }
 
     public void setAngle(double angleDegrees){
         double L = this.getLength();
         double angleRadians = Math.toRadians(angleDegrees);
-        this.x = L * Math.cos(angleRadians);
-        this.y = L * Math.sin(angleRadians);
+        this.x = L * Math.sin(angleRadians);
+        this.y = -L * Math.cos(angleRadians);
     }
-
 }
