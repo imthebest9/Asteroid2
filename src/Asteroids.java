@@ -1,13 +1,15 @@
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class Asteroids extends Application {
+public class Asteroids extends Application{
     public static void main (String[] args)  {
         try{
             launch(args);

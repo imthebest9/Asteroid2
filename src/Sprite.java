@@ -2,33 +2,27 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class Sprite {
-    public Vector position;
-    public Vector velocity;
+    public Vector position = new Vector();
+    public Vector velocity = new Vector();
     public double rotation; //degrees
-    public Rectangle boundary;
+    public Rectangle boundary = new Rectangle();
     public Image image;
-    public boolean remove;
+    public boolean remove = false;
+    public double aliveTime;
 
-    public Sprite(String imageFileName){
-        position = new Vector();
-        velocity = new Vector();
-        boundary = new Rectangle();
-        rotation = 0;
-        remove=false;
+    public Sprite(String imageFileName, double timeLimit){
         setImage(imageFileName);
+        aliveTime = timeLimit;
     }
 
-    public Sprite(Sprite spaceship){
-        position = new Vector();
-        velocity = new Vector();
-        boundary = new Rectangle();
-        image = new Image("image/laser.png");
+    public Sprite(Sprite spaceship, String source){
+        image = new Image(source+"/laser.png");
         rotation = spaceship.rotation;
-        remove = false;
         position.set(spaceship.position.x,spaceship.position.y);
         velocity.setLength(500);
         velocity.setAngle(rotation);
         boundary.setSize(image.getWidth(),image.getWidth());
+        aliveTime = 5;
     }
 
     public void setImage(String imageFileName){
@@ -44,8 +38,10 @@ public class Sprite {
     }
 
     public boolean Overlaps(Sprite other){
-        return getBoundary().Overlaps(other.getBoundary());
+        return remove = getBoundary().Overlaps(other.getBoundary());
     }
+
+    public boolean Removed(){return (remove || aliveTime<=0);}
 
     public void wrap (double screenWidth, double screenHeight){
 
@@ -65,6 +61,7 @@ public class Sprite {
         // update position according to velocity
         double deltaTime = 1/60.0;
         position.add(velocity.x * deltaTime, velocity.y * deltaTime);
+        aliveTime-=deltaTime;
     }
 
     public void render(GraphicsContext context){
@@ -75,6 +72,4 @@ public class Sprite {
         context.drawImage(image, -image.getWidth()/2, -image.getHeight()/2);
         context.restore();
     }
-
-    public boolean getRemove(){return remove;}
 }
