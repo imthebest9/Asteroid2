@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-image: url('file:D:/Asteroid2/src/background.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<AnchorPane style="-fx-background-image: url('background.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="376.0" layoutY="56.0" prefHeight="60.0" prefWidth="278.0" style="-fx-border-color: white; -fx-border-width: 3; -fx-background-color: rgba(100,50,150,0.5);" text="Game Setting" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="384.0" AnchorPane.leftAnchor="376.0" AnchorPane.rightAnchor="346.0" AnchorPane.topAnchor="56.0">
          <font>

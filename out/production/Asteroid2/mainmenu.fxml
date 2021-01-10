@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-image: url('file:D:/Asteroid2/src/background.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<AnchorPane style="-fx-background-image: url('background.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="240.0" layoutY="58.0" prefHeight="60.0" prefWidth="520.0" style="-fx-border-color: white; -fx-border-width: 3; -fx-background-color: rgba(100,50,150,0.5);" text="WELCOME TO THE ASTEROID" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="382.0" AnchorPane.leftAnchor="240.0" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="58.0">
          <font>
