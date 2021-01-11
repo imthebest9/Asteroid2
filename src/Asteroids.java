@@ -28,6 +28,7 @@ public class Asteroids extends Application{
         mainStage.initStyle(StageStyle.UNDECORATED);
         mainStage.show();
         // LK is here
+        // second
     }
 }
 
