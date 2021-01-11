@@ -27,6 +27,7 @@ public class Asteroids extends Application{
         mainStage.setScene(new Scene(menuroot));
         mainStage.initStyle(StageStyle.UNDECORATED);
         mainStage.show();
+        // LK is here
     }
 }
 
