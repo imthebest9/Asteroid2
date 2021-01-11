@@ -35,7 +35,7 @@ public class Controller implements Initializable {
     int life=2;
     int rewardCombo=0;
     int rewardBoundary=10;
-    int asteroidNum;
+    static int asteroidNum;
     double width;
     double height;
     String scoreBoard;
@@ -72,15 +72,17 @@ public class Controller implements Initializable {
     }
 
     public void selectTheme(ActionEvent event) throws IOException {
-        if(((Button)event.getSource()).getText().equals("PLAY")){
+        if(((Button)event.getSource()).getText().equals("SURVIVAL MODE")){
             isClockMode=false;
         }
         else {
             isClockMode = true;
+            asteroidNum = asteroidNumSpinner.getValue();
         }
         root.setCenter(FXMLLoader.load(getClass().getResource("ThemeMenu.fxml")));
         stage = (Stage)(((Button) event.getSource()).getScene().getWindow());
         stage.setScene(mainScene);
+
     }
 
     public void toplaygame(ActionEvent event) throws IOException{
@@ -89,7 +91,6 @@ public class Controller implements Initializable {
             theme = "galaxy";
         else
             theme = "aesthetic";
-
         Sprite background = new Sprite(theme +"/background.gif", 0);
 
         width = background.image.getWidth();
@@ -123,7 +124,7 @@ public class Controller implements Initializable {
         }
 
         if(isClockMode) {
-            asteroidNum = asteroidNumSpinner.getValue();
+
             spaceship.aliveTime = timeSpinner.getValue();
         }
         // handle continuous inputs (as long as key is pressed)
@@ -171,7 +172,7 @@ public class Controller implements Initializable {
                 }
                 else spaceship.velocity.setLength(0);
 
-                if (asteroidList.isEmpty() || asteroidList.size()<20 && Math.random()<0.01)
+                if (asteroidList.isEmpty() || asteroidList.size()<10 && Math.random()<0.01)
                     addAsteroid(theme,spaceship);
 
                 for(Sprite asteroid:asteroidList){
@@ -282,36 +283,30 @@ public class Controller implements Initializable {
                     }
                 }*/
                 // if there is no life, display a vbox over the top to allow user to go back to main menu
-                //life=0;
-                if(life <= 0){
+                if(life <= 0 || (isClockMode && spaceship.aliveTime <=0)){
                     this.stop();
                     //root.setEffect(new GaussianBlur());
 
-                    VBox gameoverRoot = new VBox(250);
-                    Label label = new Label("Game over");
-                    label.setFont(new Font("Times New Roman", 50));
-                    gameoverRoot.getChildren().add(label);
-                    gameoverRoot.setStyle("-fx-background-color: rgba(255,255,255,0.8)");
-                    gameoverRoot.setAlignment(Pos.CENTER);
-                    gameoverRoot.setPadding(new Insets(20));
+                    String gameover = "G A M E  O V E R🤞";
+                    context.fillText(gameover,400,250);
+                    context.strokeText(gameover, 400, 250);
+                    //context.fillRect(500,250,300,300);
 
-                    Button gotomainmenu = new Button("GO TO MAIN MENU");
-                    gameoverRoot.getChildren().add(gotomainmenu);
 
-                    Stage popupStage = new Stage(StageStyle.TRANSPARENT);
-                    Stage window=(Stage)((Node)event.getSource()).getScene().getWindow();
-                    popupStage.initOwner(window);
-                    popupStage.initModality(Modality.APPLICATION_MODAL);
-                    popupStage.setScene(new Scene(gameoverRoot, Color.TRANSPARENT));
-
-                    popupStage.show();
+                    mainScene.setOnKeyPressed(key -> {
+                        if(key.getCode()==KeyCode.ESCAPE){
+                            try {
+                                root.setCenter(FXMLLoader.load(getClass().getResource("mainmenu.fxml")));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
             }
         };
 
         gameloop.start();
-
-
 
 
         Stage window=(Stage)((Node)event.getSource()).getScene().getWindow();
@@ -330,7 +325,7 @@ public class Controller implements Initializable {
                 break;
             else asteroid.setImage(theme+"/rock2.png");
         }
-        asteroid.velocity.setLength(100);
+        asteroid.velocity.setLength(100 + 10*life);
         asteroid.velocity.setAngle(360 * Math.random());
         asteroidList.add(asteroid);
     }
