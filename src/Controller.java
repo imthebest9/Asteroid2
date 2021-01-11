@@ -1,28 +1,20 @@
-import com.sun.glass.ui.Application;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
@@ -41,10 +33,9 @@ public class Controller implements Initializable {
     String scoreBoard;
     static boolean isClockMode;
     String theme;
-    Font font;
     Stage stage;
-    @FXML Spinner<Integer> asteroidNumSpinner = new Spinner<>(10,100,10);
-    @FXML Spinner<Integer> timeSpinner = new Spinner<>(30,3000,30);
+    @FXML Spinner<Integer> asteroidNumSpinner = new Spinner<>();
+    @FXML Spinner<Integer> timeSpinner = new Spinner<>();
 
     LinkedList<KeyCode> keyPressedList = new LinkedList<>();
     LinkedList <Sprite> laserList = new LinkedList<>();
@@ -53,16 +44,8 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         asteroidNumSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(20,100,20,10));
-        timeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(30,3000,30,30));
-        mainScene.setOnKeyPressed(key->{
-            if(key.getCode()==KeyCode.ESCAPE){
-                try {
-                    root.setCenter(FXMLLoader.load(getClass().getResource("mainmenu.fxml")));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        timeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(30,300,30,30));
+        backToMainMenu();
     }
 
     public void clockModeSetting(ActionEvent event) throws IOException{
@@ -85,7 +68,7 @@ public class Controller implements Initializable {
 
     }
 
-    public void toplaygame(ActionEvent event) throws IOException{
+    public void PlayGame(ActionEvent event){
 
         if(((Button)event.getSource()).getText().equals("Void Galaxy"))
             theme = "galaxy";
@@ -108,23 +91,18 @@ public class Controller implements Initializable {
         root.setCenter(canvas);
         GraphicsContext context = canvas.getGraphicsContext2D();
 
-        if(theme=="galaxy"){
-            font = new Font("Arial Black", 30);
-            context.setFont(font);
-            context.setFill(Color.WHITE);
+        if(theme.equals("galaxy")){
+            context.setFont(new Font("Arial Black", 30));
             context.setStroke(Color.web("#4f198e"));
-            context.setLineWidth(1);
         }
         else{
-            font = new Font("Bodoni MT Black", 30);
-            context.setFont(font);
-            context.setFill(Color.WHITE);
+            context.setFont(new Font("Bodoni MT Black", 30));
             context.setStroke(Color.web("#ff618b"));
-            context.setLineWidth(1);
         }
+        context.setFill(Color.WHITE);
+        context.setLineWidth(1);
 
         if(isClockMode) {
-
             spaceship.aliveTime = timeSpinner.getValue();
         }
         // handle continuous inputs (as long as key is pressed)
@@ -139,11 +117,7 @@ public class Controller implements Initializable {
                         laserList.add(laser);
                         break;
                     case ESCAPE:
-                        try {
-                            root.setCenter(FXMLLoader.load(getClass().getResource("mainmenu.fxml")));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        backToMainMenu();
                         return;
                     default:
                         if(!keyPressedList.contains(keyName)) {
@@ -158,7 +132,7 @@ public class Controller implements Initializable {
             addAsteroid(theme, spaceship);
 
 
-        AnimationTimer gameloop = new AnimationTimer() {
+        AnimationTimer gameLoop = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 // process user input
@@ -262,11 +236,14 @@ public class Controller implements Initializable {
 
                 spaceship.render(context);
 
-                if(isClockMode)
-                    scoreBoard="Target: "+ asteroidNum
-                            + " Combo: "+ combo
-                            + " Life: "+ life
-                            + String.format(" Time: %.1f",spaceship.aliveTime);
+                if(isClockMode) {
+                    if (spaceship.aliveTime < 0)
+                        spaceship.aliveTime = 0;
+                    scoreBoard = "Target: " + asteroidNum
+                            + " Combo: " + combo
+                            + " Life: " + life
+                            + String.format(" Time: %.1f", spaceship.aliveTime);
+                }
                 else
                     scoreBoard="Score: " + asteroidNum*10
                             +" Combo: " + combo
@@ -275,47 +252,26 @@ public class Controller implements Initializable {
                 context.fillText(scoreBoard, 10, 30);
                 context.strokeText(scoreBoard, 10, 30);
 
-                /*if(life <=0){
-                    try {
-                        root.setCenter(FXMLLoader.load(getClass().getResource("gameover.fxml")));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }*/
                 // if there is no life, display a vbox over the top to allow user to go back to main menu
                 if(life <= 0 || (isClockMode && spaceship.aliveTime <=0)){
                     this.stop();
-                    //root.setEffect(new GaussianBlur());
-///comment done by AMJ
-                    String gameover = "G A M E  O V E R🤞";
-                    context.fillText(gameover,400,250);
-                    context.strokeText(gameover, 400, 250);
-                    //context.fillRect(500,250,300,300);
-
-
-                    mainScene.setOnKeyPressed(key -> {
-                        if(key.getCode()==KeyCode.ESCAPE){
-                            try {
-                                root.setCenter(FXMLLoader.load(getClass().getResource("mainmenu.fxml")));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+                    String gameOver = "G A M E  O V E R🤞";
+                    context.fillText(gameOver,400,250);
+                    context.strokeText(gameOver, 400, 250);
+                    context.fillRect(500,250,300,300);
+                    backToMainMenu();
+                    return;
                 }
             }
         };
-
-        gameloop.start();
-
-
+        gameLoop.start();
         Stage window=(Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(mainScene);
         window.show();
     }
 
     public void addAsteroid(String theme, Sprite spaceship){
-        Sprite asteroid = new Sprite(theme+"/rock1.png",30);
+        Sprite asteroid = new Sprite(theme+"/asteroid1.png",30);
         while(true){
             double x = Math.random()*width;
             double y = Math.random()*height;
@@ -323,17 +279,33 @@ public class Controller implements Initializable {
             if(Math.abs(spaceship.position.x-x)>spaceship.image.getHeight()+asteroid.image.getHeight()&&
                     Math.abs(spaceship.position.y-y)>spaceship.image.getHeight()+asteroid.image.getHeight())
                 break;
-            else asteroid.setImage(theme+"/rock2.png");
+            else asteroid.setImage(theme+"/asteroid2.png");
         }
         asteroid.velocity.setLength(100 + 10*life);
         asteroid.velocity.setAngle(360 * Math.random());
         asteroidList.add(asteroid);
     }
 
-    public void thisisrule(ActionEvent event) throws IOException {
+    public void Rule(ActionEvent event) throws IOException {
         root.setCenter(FXMLLoader.load(getClass().getResource("Rules.fxml")));
         stage = (Stage)(((Button) event.getSource()).getScene().getWindow());
         stage.setScene(mainScene);
+    }
+
+    public void backToMainMenu(){
+        mainScene.setOnKeyPressed(key->{
+            if(key.getCode()==KeyCode.ESCAPE){
+                try {
+                    root.setCenter(FXMLLoader.load(getClass().getResource("MainMenu.fxml")));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mainScene.setOnKeyPressed(esc -> {
+                    if(esc.getCode()==KeyCode.ESCAPE)
+                        exitGame();
+                });
+            }
+        });
     }
 
     public void exitGame(){
