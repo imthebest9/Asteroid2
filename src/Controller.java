@@ -4,18 +4,24 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
@@ -150,6 +156,7 @@ public class Controller implements Initializable {
         for (int i = 0; i < 5; i++)
             addAsteroid(theme, spaceship);
 
+
         AnimationTimer gameloop = new AnimationTimer() {
             @Override
             public void handle(long l) {
@@ -266,10 +273,46 @@ public class Controller implements Initializable {
                             + life+String.format(" Time: %.1f",-spaceship.aliveTime);
                 context.fillText(scoreBoard, 10, 30);
                 context.strokeText(scoreBoard, 10, 30);
+
+                /*if(life <=0){
+                    try {
+                        root.setCenter(FXMLLoader.load(getClass().getResource("gameover.fxml")));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }*/
+                // if there is no life, display a vbox over the top to allow user to go back to main menu
+                //life=0;
+                if(life <= 0){
+                    this.stop();
+                    //root.setEffect(new GaussianBlur());
+
+                    VBox gameoverRoot = new VBox(250);
+                    Label label = new Label("Game over");
+                    label.setFont(new Font("Times New Roman", 50));
+                    gameoverRoot.getChildren().add(label);
+                    gameoverRoot.setStyle("-fx-background-color: rgba(255,255,255,0.8)");
+                    gameoverRoot.setAlignment(Pos.CENTER);
+                    gameoverRoot.setPadding(new Insets(20));
+
+                    Button gotomainmenu = new Button("GO TO MAIN MENU");
+                    gameoverRoot.getChildren().add(gotomainmenu);
+
+                    Stage popupStage = new Stage(StageStyle.TRANSPARENT);
+                    Stage window=(Stage)((Node)event.getSource()).getScene().getWindow();
+                    popupStage.initOwner(window);
+                    popupStage.initModality(Modality.APPLICATION_MODAL);
+                    popupStage.setScene(new Scene(gameoverRoot, Color.TRANSPARENT));
+
+                    popupStage.show();
+                }
             }
         };
 
         gameloop.start();
+
+
+
 
         Stage window=(Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(mainScene);
