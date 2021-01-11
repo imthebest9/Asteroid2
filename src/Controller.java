@@ -286,7 +286,7 @@ public class Controller implements Initializable {
                 if(life <= 0 || (isClockMode && spaceship.aliveTime <=0)){
                     this.stop();
                     //root.setEffect(new GaussianBlur());
-
+///comment done by AMJ
                     String gameover = "G A M E  O V E R🤞";
                     context.fillText(gameover,400,250);
                     context.strokeText(gameover, 400, 250);
