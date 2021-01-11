@@ -335,6 +335,12 @@ public class Controller implements Initializable {
         asteroidList.add(asteroid);
     }
 
+    public void thisisrule(ActionEvent event) throws IOException {
+        root.setCenter(FXMLLoader.load(getClass().getResource("Rules.fxml")));
+        stage = (Stage)(((Button) event.getSource()).getScene().getWindow());
+        stage.setScene(mainScene);
+    }
+
     public void exitGame(){
         System.exit(0);
     }
