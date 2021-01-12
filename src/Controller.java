@@ -215,7 +215,7 @@ public class Controller implements Initializable {
                             //if miss an asteroid while score is 0, lose 1 life
                             if(asteroidNum==0) {
                                 rewardCombo=0;
-                                rewardBoundary=10*--life;
+                                rewardBoundary=10*life;
                             }
                             else asteroidNum--;
                         }
@@ -288,8 +288,12 @@ public class Controller implements Initializable {
                     //root.setEffect(new GaussianBlur());
 ///comment done by AMJ
                     String gameover = "G A M E  O V E R🤞";
-                    context.fillText(gameover,400,250);
-                    context.strokeText(gameover, 400, 250);
+                    String esc = "Press Esc to go back to Menu";
+                    context.fillText(gameover,400,225);
+                    context.strokeText(gameover, 400, 225);
+                    context.fillText(esc,300,275);
+                    context.strokeText(esc,300,275);
+                    //context.strokeText(esc,400,250);
                     //context.fillRect(500,250,300,300);
 
 
