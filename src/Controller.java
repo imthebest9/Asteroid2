@@ -189,7 +189,8 @@ public class Controller implements Initializable {
                             //if miss an asteroid while score is 0, lose 1 life
                             if(asteroidNum==0) {
                                 rewardCombo=0;
-                                rewardBoundary=10*--life;
+                                rewardBoundary=10*life;
+
                             }
                             else asteroidNum--;
                         }
@@ -255,16 +256,24 @@ public class Controller implements Initializable {
                 // if there is no life, display a vbox over the top to allow user to go back to main menu
                 if(life <= 0 || (isClockMode && spaceship.aliveTime <=0)){
                     this.stop();
-                    String gameOver = "G A M E  O V E R🤞";
-                    context.fillText(gameOver,400,250);
-                    context.strokeText(gameOver, 400, 250);
-                    context.fillRect(500,250,300,300);
+
+                    //root.setEffect(new GaussianBlur());
+                    String gameover = "G A M E  O V E R🤞";
+                    String esc = "Press Esc to go back to Menu";
+                    context.fillText(gameover,400,225);
+                    context.strokeText(gameover, 400, 225);
+                    context.fillText(esc,300,275);
+                    context.strokeText(esc,300,275);
+                    //context.strokeText(esc,400,250);
+                    //context.fillRect(500,250,300,300);
                     backToMainMenu();
                     return;
                 }
             }
         };
+
         gameLoop.start();
+
         Stage window=(Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(mainScene);
         window.show();

@@ -31,5 +31,6 @@ public class Asteroids extends Application{
             if(key.getCode()== KeyCode.ESCAPE)
                 System.exit(0);
         });
+
     }
 }
