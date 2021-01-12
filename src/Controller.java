@@ -28,6 +28,7 @@ public class Controller implements Initializable {
     int rewardCombo=0;
     int rewardBoundary=10;
     static int asteroidNum;
+    static double gameTime;
     double width;
     double height;
     String scoreBoard;
@@ -61,6 +62,7 @@ public class Controller implements Initializable {
         else {
             isClockMode = true;
             asteroidNum = asteroidNumSpinner.getValue();
+            gameTime = timeSpinner.getValue();
         }
         root.setCenter(FXMLLoader.load(getClass().getResource("ThemeMenu.fxml")));
         stage = (Stage)(((Button) event.getSource()).getScene().getWindow());
@@ -103,7 +105,7 @@ public class Controller implements Initializable {
         context.setLineWidth(1);
 
         if(isClockMode) {
-            spaceship.aliveTime = timeSpinner.getValue();
+            spaceship.aliveTime = gameTime;
         }
         // handle continuous inputs (as long as key is pressed)
 
@@ -267,7 +269,19 @@ public class Controller implements Initializable {
                     //context.strokeText(esc,400,250);
                     //context.fillRect(500,250,300,300);
                     backToMainMenu();
-                    return;
+                }
+                else if(isClockMode && asteroidNum == 0){
+                    this.stop();
+                    //root.setEffect(new GaussianBlur());
+                    String gameover = "   Y O U  D I D I T!   ";
+                    String esc = "Press Esc to go back to Menu";
+                    context.fillText(gameover,400,225);
+                    context.strokeText(gameover, 400, 225);
+                    context.fillText(esc,300,275);
+                    context.strokeText(esc,300,275);
+                    //context.strokeText(esc,400,250);
+                    //context.fillRect(500,250,300,300);
+                    backToMainMenu();
                 }
             }
         };
