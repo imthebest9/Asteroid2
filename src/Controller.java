@@ -260,7 +260,7 @@ public class Controller implements Initializable {
                     this.stop();
 
                     //root.setEffect(new GaussianBlur());
-                    String gameover = "G A M E  O V E R🤞";
+                    String gameover = "G A M E  O V E R";
                     String esc = "Press Esc to go back to Menu";
                     context.fillText(gameover,400,225);
                     context.strokeText(gameover, 400, 225);
@@ -273,12 +273,12 @@ public class Controller implements Initializable {
                 else if(isClockMode && asteroidNum == 0){
                     this.stop();
                     //root.setEffect(new GaussianBlur());
-                    String gameover = "   Y O U  D I D I T!   ";
+                    String gameover = "YOU DID IT!";
                     String esc = "Press Esc to go back to Menu";
                     context.fillText(gameover,400,225);
                     context.strokeText(gameover, 400, 225);
-                    context.fillText(esc,300,275);
-                    context.strokeText(esc,300,275);
+                    context.fillText(esc,250,275);
+                    context.strokeText(esc,250,275);
                     //context.strokeText(esc,400,250);
                     //context.fillRect(500,250,300,300);
                     backToMainMenu();
