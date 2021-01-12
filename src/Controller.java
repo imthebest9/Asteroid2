@@ -216,6 +216,7 @@ public class Controller implements Initializable {
                             if(asteroidNum==0) {
                                 rewardCombo=0;
                                 rewardBoundary=10*life;
+
                             }
                             else asteroidNum--;
                         }
