@@ -3,12 +3,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.io.IOException;
 
 public class Asteroids extends Application{
+
     public static void main (String[] args)  {
         try{
             launch(args);
@@ -21,7 +21,6 @@ public class Asteroids extends Application{
         }
     }
     public void start(Stage mainStage) throws IOException{
-        new AudioClip((getClass().getResource("dumb.mp3")).toString()).play();
         mainStage.setTitle("Asteroids");
         Parent menuRoot = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         mainStage.setScene(new Scene(menuRoot));
@@ -31,6 +30,5 @@ public class Asteroids extends Application{
             if(key.getCode()== KeyCode.ESCAPE)
                 System.exit(0);
         });
-
     }
 }
