@@ -280,8 +280,8 @@ public class Controller implements Initializable {
                     //root.setEffect(new GaussianBlur());
                     String gameOver = "💫 G A M E  O V E R 💫";
                     String esc = "Press Esc to go back to Menu";
-                    context.fillText(gameOver,400,225);
-                    context.strokeText(gameOver, 400, 225);
+                    context.fillText(gameOver,350,225);
+                    context.strokeText(gameOver, 350, 225);
                     context.fillText(esc,300,275);
                     context.strokeText(esc,300,275);
                     //context.strokeText(esc,400,250);
