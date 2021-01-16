@@ -284,8 +284,6 @@ public class Controller implements Initializable {
                     context.strokeText(gameOver, 350, 225);
                     context.fillText(esc,300,275);
                     context.strokeText(esc,300,275);
-                    //context.strokeText(esc,400,250);
-                    //context.fillRect(500,250,300,300);
                     backToMainMenu();
                 }
                 else if(isTimeMode && asteroidNum==0){
@@ -297,8 +295,6 @@ public class Controller implements Initializable {
                     context.strokeText(gameOver, 400, 225);
                     context.fillText(esc,250,275);
                     context.strokeText(esc,250,275);
-                    //context.strokeText(esc,400,250);
-                    //context.fillRect(500,250,300,300);
                     backToMainMenu();
                 }
             }
@@ -348,7 +344,6 @@ public class Controller implements Initializable {
             }
         });
     }
-
     public void exitGame(){
         System.exit(0);
     }
