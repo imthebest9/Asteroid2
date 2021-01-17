@@ -291,10 +291,10 @@ public class Controller implements Initializable {
                     //root.setEffect(new GaussianBlur());
                     String gameOver = "🌟 YOU DID IT! 🌟";
                     String esc = "Press Esc to go back to Menu";
-                    context.fillText(gameOver,400,225);
-                    context.strokeText(gameOver, 400, 225);
-                    context.fillText(esc,250,275);
-                    context.strokeText(esc,250,275);
+                    context.fillText(gameOver,370,225);
+                    context.strokeText(gameOver, 370, 225);
+                    context.fillText(esc,300,275);
+                    context.strokeText(esc,300,275);
                     backToMainMenu();
                 }
             }
