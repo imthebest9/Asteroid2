@@ -34,7 +34,8 @@ public class Controller implements Initializable {
     static boolean isTimeMode;
     static AudioClip music = new AudioClip("file:src/music.mp3");
     AudioClip shoot;
-    AudioClip getScore;
+    AudioClip score;
+    AudioClip explode;
     double width;
     double height;
     String scoreBoard;
@@ -95,11 +96,12 @@ public class Controller implements Initializable {
         music.play();
 
         shoot = new AudioClip("file:src/"+theme+"/laser.mp3");
-        getScore = new AudioClip("file:src/"+theme+"/getScore.mp3");
+        score = new AudioClip("file:src/"+theme+"/score.mp3");
+        explode = new AudioClip("file:src/"+theme+"/explode.mp3");
 
         Sprite background = new Sprite(theme +"/background.gif");
         Sprite reward = new Sprite(theme +"/reward.gif");
-        Sprite score = new Sprite(theme +"/score.gif");
+        Sprite elapsed = new Sprite(theme +"/elapsed.gif");
         Sprite collide = new Sprite(theme +"/collide.gif");
 
         width = background.image.getWidth();
@@ -133,7 +135,7 @@ public class Controller implements Initializable {
                 //avoid adding duplicates to the list
                 switch (keyName){
                     case SPACE:
-                        if(laserList.size()<9) {
+                        if(laserList.size()<5) {
                             Sprite laser = new Sprite(spaceship, theme);
                             laserList.add(laser);
                             shoot.play();
@@ -174,6 +176,7 @@ public class Controller implements Initializable {
                 for(Sprite asteroid:asteroidList){
                     //if the spaceship collides an asteroid
                     if(asteroid.overlaps(spaceship)){
+                        explode.play();
                         collide.image = new Image(theme +"/collide.gif");
                         collide.generate(spaceship.position.x, spaceship.position.y, 2);
                         rewardCombo=0;
@@ -182,7 +185,7 @@ public class Controller implements Initializable {
                             asteroidNum--;
                         else{
                             asteroidNum-=5;
-                            if(asteroidNum<0) asteroidNum=0; //avoid negative score
+                            if(asteroidNum<0) asteroidNum=0; //avoid negative elapsed
                         }
                     }
                 }
@@ -193,9 +196,9 @@ public class Controller implements Initializable {
                         for (Sprite asteroid : asteroidList) {
                             //if a laser hits an asteroid
                             if (!asteroid.remove && asteroid.overlaps(laser)) {
-                                getScore.play();
-                                score.image = new Image(theme +"/score.gif");
-                                score.generate(asteroid.position.x,asteroid.position.y,1);
+                                score.play();
+                                elapsed.image = new Image(theme +"/elapsed.gif");
+                                elapsed.generate(asteroid.position.x,asteroid.position.y,1);
                                 laser.remove = true;//remove to make combo;
                                 combo++;
                                 rewardCombo++;
@@ -213,7 +216,7 @@ public class Controller implements Initializable {
                         laser.remove=true;
                         combo=0;
                         if(!isTimeMode){
-                            //if miss an asteroid while score is 0, lose 1 life
+                            //if miss an asteroid while elapsed is 0, lose 1 life
                             if(asteroidNum==0) {
                                 rewardCombo=0;
                             }
@@ -230,17 +233,17 @@ public class Controller implements Initializable {
 
                 //if the reward is available and the spaceship get the reward
                 if(!reward.remove && reward.overlaps(spaceship)) {
-                    getScore.play();
+                    score.play();
                     rewardBoundary=10*++life; //rewardBoundary increases as life increases
                     rewardCombo=0;
-                    score.image = new Image(theme +"/score.gif");
-                    score.generate(reward.position.x, reward.position.y, 1);
+                    elapsed.image = new Image(theme +"/elapsed.gif");
+                    elapsed.generate(reward.position.x, reward.position.y, 1);
                     if(isTimeMode) spaceship.aliveTime+=5;
                     else asteroidNum += 5;
                 }
                 else reward.update();
 
-                score.update();
+                elapsed.update();
                 collide.update();
                 collide.position.set(spaceship.position.x, spaceship.position.y);
                 collide.rotation = spaceship.rotation;
@@ -267,8 +270,8 @@ public class Controller implements Initializable {
 
                 if(!reward.isRemoved())
                     reward.render(context);
-                if(!score.isRemoved())
-                    score.render(context);
+                if(!elapsed.isRemoved())
+                    elapsed.render(context);
                 if(!collide.isRemoved())
                     collide.render(context);
 
@@ -290,6 +293,8 @@ public class Controller implements Initializable {
 
                 // if there is no life, display a vbox over the top to allow user to go back to main menu
                 if(life <= 0 || (isTimeMode && spaceship.aliveTime ==0)){
+                    music.stop();
+                    new AudioClip("file:src/failed.mp3").play();
                     this.stop();
                     //root.setEffect(new GaussianBlur());
                     String gameOver = "💫 G A M E  O V E R 💫";
@@ -301,6 +306,8 @@ public class Controller implements Initializable {
                     backToMainMenu();
                 }
                 else if(isTimeMode && asteroidNum==0){
+                    music.stop();
+                    new AudioClip("file:src/victory.mp3").play();
                     this.stop();
                     //root.setEffect(new GaussianBlur());
                     String gameOver = "🌟 YOU DID IT! 🌟";
