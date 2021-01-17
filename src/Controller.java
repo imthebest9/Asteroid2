@@ -50,7 +50,7 @@ public class Controller implements Initializable {
         if(!music.isPlaying())
             music.play();
         asteroidNumSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(20,100,10,10));
-        timeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(30,300,30,30));
+        timeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(30,180,30,15));
         backToMainMenu();
     }
 
@@ -165,7 +165,8 @@ public class Controller implements Initializable {
                         collide.generate(spaceship.position.x, spaceship.position.y, 2);
                         rewardCombo=0;
                         rewardBoundary=5*life--;
-                        if(isTimeMode) spaceship.aliveTime-=3;
+                        if(isTimeMode)
+                            asteroidNum--;
                         else{
                             asteroidNum-=5;
                             if(asteroidNum<0) asteroidNum=0; //avoid negative score
@@ -186,7 +187,6 @@ public class Controller implements Initializable {
                                 rewardCombo++;
                                 if(isTimeMode) {
                                     asteroidNum -= 1;
-                                    spaceship.aliveTime+=1/60.0;
                                 }
                                 else{
                                     asteroidNum += 1 + combo/10;
@@ -198,8 +198,7 @@ public class Controller implements Initializable {
                     else {
                         laser.remove=true;
                         combo=0;
-                        if(isTimeMode) spaceship.aliveTime-=1;
-                        else {
+                        if(!isTimeMode){
                             //if miss an asteroid while score is 0, lose 1 life
                             if(asteroidNum==0) {
                                 rewardCombo=0;
@@ -221,7 +220,7 @@ public class Controller implements Initializable {
                     rewardCombo=0;
                     score.image = new Image(theme +"/score.gif");
                     score.generate(reward.position.x, reward.position.y, 1);
-                    if(isTimeMode) spaceship.aliveTime+=10;
+                    if(isTimeMode) spaceship.aliveTime+=5;
                     else asteroidNum += 5;
                 }
                 else reward.update();
