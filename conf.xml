@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>C:\Users\C Young\Desktop\Asteroid2\out\artifacts\Asteroid2_jar\Asteroid2.jar</jar>
-  <outfile>C:\Users\C Young\Desktop\Asteroid2\ASTEROID.exe</outfile>
+  <outfile>C:\Users\C Young\Desktop\Asteroid2\Asteroid.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>

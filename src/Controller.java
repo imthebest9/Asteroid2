@@ -33,6 +33,8 @@ public class Controller implements Initializable {
     static double aliveTime;
     static boolean isTimeMode;
     static AudioClip music = new AudioClip("file:src/music.mp3");
+    AudioClip shoot;
+    AudioClip getScore;
     double width;
     double height;
     String scoreBoard;
@@ -47,8 +49,13 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if(!music.isPlaying())
+        if(music.getSource()!="file:src/music.mp3")
+            music.stop();
+        if(!music.isPlaying()) {
+            music = new AudioClip("file:src/music.mp3");
+            music.setCycleCount(AudioClip.INDEFINITE);
             music.play();
+        }
         asteroidNumSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(20,100,10,10));
         timeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(30,180,30,15));
         backToMainMenu();
@@ -83,9 +90,12 @@ public class Controller implements Initializable {
             theme = "aesthetic";
 
         music.stop();
-        music = new AudioClip("file:src/" + theme +"/music.mp3");
+        music = new AudioClip("file:src/"+theme+"/music.mp3");
         music.setCycleCount(AudioClip.INDEFINITE);
         music.play();
+
+        shoot = new AudioClip("file:src/"+theme+"/laser.mp3");
+        getScore = new AudioClip("file:src/"+theme+"/getScore.mp3");
 
         Sprite background = new Sprite(theme +"/background.gif");
         Sprite reward = new Sprite(theme +"/reward.gif");
@@ -123,8 +133,11 @@ public class Controller implements Initializable {
                 //avoid adding duplicates to the list
                 switch (keyName){
                     case SPACE:
-                        Sprite laser = new Sprite(spaceship, theme);
-                        laserList.add(laser);
+                        if(laserList.size()<9) {
+                            Sprite laser = new Sprite(spaceship, theme);
+                            laserList.add(laser);
+                            shoot.play();
+                        }
                         break;
                     case ESCAPE:
                         backToMainMenu();
@@ -180,6 +193,7 @@ public class Controller implements Initializable {
                         for (Sprite asteroid : asteroidList) {
                             //if a laser hits an asteroid
                             if (!asteroid.remove && asteroid.overlaps(laser)) {
+                                getScore.play();
                                 score.image = new Image(theme +"/score.gif");
                                 score.generate(asteroid.position.x,asteroid.position.y,1);
                                 laser.remove = true;//remove to make combo;
@@ -216,6 +230,7 @@ public class Controller implements Initializable {
 
                 //if the reward is available and the spaceship get the reward
                 if(!reward.remove && reward.overlaps(spaceship)) {
+                    getScore.play();
                     rewardBoundary=10*++life; //rewardBoundary increases as life increases
                     rewardCombo=0;
                     score.image = new Image(theme +"/score.gif");
@@ -329,8 +344,6 @@ public class Controller implements Initializable {
     public void backToMainMenu(){
         mainScene.setOnKeyPressed(key->{
             if(key.getCode()==KeyCode.ESCAPE){
-                music.stop();
-                music = new AudioClip("file:src/music.mp3");
                 try {
                     root.setCenter(FXMLLoader.load(getClass().getResource("MainMenu.fxml")));
                 } catch (IOException e) {
