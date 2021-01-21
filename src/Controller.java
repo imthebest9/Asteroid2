@@ -95,21 +95,21 @@ public class Controller implements Initializable {
         music.setCycleCount(AudioClip.INDEFINITE);
         music.play();
 
-        shoot = new AudioClip("file:src/"+theme+"/laser.mp3");
-        score = new AudioClip("file:src/"+theme+"/score.mp3");
-        explode = new AudioClip("file:src/"+theme+"/explode.mp3");
-
         Sprite background = new Sprite(theme +"/background.gif");
         Sprite reward = new Sprite(theme +"/reward.gif");
         Sprite elapsed = new Sprite(theme +"/elapsed.gif");
         Sprite collide = new Sprite(theme +"/collide.gif");
+        Sprite spaceship = new Sprite(theme +"/spaceship.png");
+
+        shoot = new AudioClip("file:src/"+theme+"/laser.mp3");
+        score = new AudioClip("file:src/"+theme+"/score.mp3");
+        explode = new AudioClip("file:src/"+theme+"/explode.mp3");
 
         width = background.image.getWidth();
         height = background.image.getHeight();
 
         background.position.set(width/2,height/2);
 
-        Sprite spaceship = new Sprite(theme +"/spaceship.png");
         spaceship.generate(width/2,height/2, aliveTime);
 
         Canvas canvas = new Canvas(width, height);
@@ -185,7 +185,7 @@ public class Controller implements Initializable {
                             asteroidNum--;
                         else{
                             asteroidNum-=5;
-                            if(asteroidNum<0) asteroidNum=0; //avoid negative elapsed
+                            if(asteroidNum<0) asteroidNum=0; //avoid negative score
                         }
                     }
                 }
@@ -206,6 +206,7 @@ public class Controller implements Initializable {
                                     asteroidNum -= 1;
                                 }
                                 else{
+                                    //Higher combo, higher point
                                     asteroidNum += 1 + combo/10;
                                 }
                             }
@@ -216,7 +217,7 @@ public class Controller implements Initializable {
                         laser.remove=true;
                         combo=0;
                         if(!isTimeMode){
-                            //if miss an asteroid while elapsed is 0, lose 1 life
+                            //if miss an asteroid while elapsed is 0
                             if(asteroidNum==0) {
                                 rewardCombo=0;
                             }
@@ -296,7 +297,6 @@ public class Controller implements Initializable {
                     music.stop();
                     new AudioClip("file:src/failed.mp3").play();
                     this.stop();
-                    //root.setEffect(new GaussianBlur());
                     String gameOver = "💫 G A M E  O V E R 💫";
                     String esc = "Press Esc to go back to Menu";
                     context.fillText(gameOver,350,225);
@@ -309,7 +309,6 @@ public class Controller implements Initializable {
                     music.stop();
                     new AudioClip("file:src/victory.mp3").play();
                     this.stop();
-                    //root.setEffect(new GaussianBlur());
                     String gameOver = "🌟 YOU DID IT! 🌟";
                     String esc = "Press Esc to go back to Menu";
                     context.fillText(gameOver,370,225);
